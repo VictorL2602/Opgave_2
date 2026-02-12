@@ -12,12 +12,13 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <util/delay.h>
+#include <stdbool.h>
 
 #include "setup/I2C.h"  //include library for i2c driver
 #include "setup/ssd1306.h" //include display driver
 void init(){
-	PORTK|=0xFF;
-  DDRK |=0x00;
+	DDRK |=0x00;
+  PORTK|=0xFF;
 	DDRG |=0b00100000;  //D4 as output PG5
   DDRE |=(1<<btn_pin);
   PORTE |=(1<<btn_pin);
@@ -43,17 +44,18 @@ int main(void)
    unsigned char in = PINK;
    char hex_tal[3];
 
-  clear_display();
-  sprintf(hex_tal, "%2X", in);
+  /*clear_display(); */
+  sprintf(hex_tal, "%02X", in);
 
-	 sendStrXY(hex_tal,4,7);  //one char  - X is line number - from 0 -7 and Y number position of the char an the line - 15 chars 
-	 
-	 sendStrXY(text,0,0); //line 0  -print the line of text
-
-   PORTG |=(1<<PG5);  //turn on the led to indicate the program is running
-   _delay_ms(1000);
-   PORTG &=~(1<<PG5);  //turn off the led to indicate
-   _delay_ms(1000);
+	sendStrXY(hex_tal,4,7);  //one char  - X is line number - from 0 -7 and Y number position of the char an the line - 15 chars 
+	sendStrXY(text,0,0); //line 0  -print the line of text
+  
+  if ((PINE & (1 << btn_pin)) == 0 ) {
+    PORTG |= (1<<PG5);
+  } else {
+    PORTG &= ~(1<<PG5);
+  }
+  _delay_ms(100);
    
 	  
 	  }
