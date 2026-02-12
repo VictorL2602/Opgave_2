@@ -55,7 +55,7 @@ int main(void)
   } else {
     PORTG &= ~(1<<PG5);
   }
-  _delay_ms(100);
+  _delay_ms(10);
    
 	  
 	  }
